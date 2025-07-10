@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Richiesta Assistenza Scolastica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            padding: 8px 15px;
+            color: white;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .language-selector:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .language-selector option {
+            background: #2c3e50;
+            color: white;
+        }
+
+        /* Stili specifici per le lingue */
+        body.urdu {
+            direction: rtl;
+        }
+        
+        body.urdu .form-grid {
+            direction: rtl;
+        }
+        
+        body.urdu .service-options {
+            direction: rtl;
+        }
+        
+        body.urdu .language-selector {
+            left: 20px;
+            right: auto;
+        }
+        
+        body.arabic {
+            direction: rtl;
+        }
+        
+        body.arabic .form-grid {
+            direction: rtl;
+        }
+        
+        body.arabic .service-options {
+            direction: rtl;
+        }
+        
+        body.arabic .language-selector {
+            left: 20px;
+            right: auto;
+        }
+        
+        body.chinese {
+            line-height: 1.6;
+        }
+        
+        body.chinese .form-group label,
+        body.chinese .service-title {
+            letter-spacing: 0.5px;
+        }
+
+        .button-group {
+            margin-top: 20px;
+        }
+        
+        .info-text {
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+            margin: 10px 0 20px 0;
+            font-style: italic;
+        }
+        
+        .mailto-btn {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            margin-top: 10px;
+        }
+        
+        .mailto-btn:hover {
+            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .form-container {
+            padding: 40px 30px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .service-selection {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border: 2px solid #e0e6ed;
+        }
+
+        .service-selection h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .service-options {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .service-option {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .service-option input[type="checkbox"] {
+            display: none;
+        }
+
+        .service-option label {
+            display: block;
+            padding: 20px;
+            background: white;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .service-option input[type="checkbox"]:checked + label {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .service-option .service-title {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .service-option .service-desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .submit-btn {
+            background: linear-gradient(45deg, #2c3e50, #3498db);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .email-preview {
+            background: #f8f9fa;
+            border: 2px solid #e0e6ed;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .email-preview h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .email-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .copy-btn {
+            background: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9em;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #219a52;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .service-options {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .form-container {
+                padding: 30px 20px;
+            }
+        }
+
+        .icon {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <select class="language-selector" id="languageSelector" onchange="changeLanguage()">
+                <option value="it">🇮🇹 Italiano</option>
+                <option value="zh">🇨🇳 中文</option>
+                <option value="ur">🇵🇰 اردو</option>
+                <option value="ar">🇸🇦 العربية</option>
+                <option value="sq">🇦🇱 Shqip</option>
+            </select>
+            <h1 data-translate="header-title">📚 Assistenza Tecnica IC Puddu</h1>
+            <p data-translate="header-subtitle">Compila il form per richiedere supporto tecnico</p>
+        </div>
+
+        <div class="form-container">
+            <form id="assistanceForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="parentName" data-translate="parent-name">Nome Genitore *</label>
+                        <input type="text" id="parentName" name="parentName" required style="text-transform: capitalize;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="studentName" data-translate="student-name">Nome Alunno *</label>
+                        <input type="text" id="studentName" name="studentName" required style="text-transform: capitalize;">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="school" data-translate="school">Scuola *</label>
+                        <select id="school" name="school" required>
+                            <option value="" data-translate="select-school">Seleziona la scuola</option>
+                            <option value="Infanzia">Infanzia</option>
+                            <option value="Primaria">Primaria</option>
+                            <option value="Secondaria di I grado">Secondaria di I grado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="plesso" data-translate="plesso">Plesso *</label>
+                        <select id="plesso" name="plesso" required>
+                            <option value="" data-translate="select-plesso">Seleziona il plesso</option>
+                            <option value="C. Puddu">C. Puddu</option>
+                            <option value="G. Rodari">G. Rodari</option>
+                            <option value="Don Bosco">Don Bosco</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="classe" data-translate="class">Classe *</label>
+                        <select id="classe" name="classe" required>
+                            <option value="" data-translate="select-class">Seleziona la classe</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="sezione" data-translate="section">Sezione *</label>
+                        <select id="sezione" name="sezione" required>
+                            <option value="" data-translate="select-section">Seleziona la sezione</option>
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                            <option value="H">H</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="service-selection">
+                    <h3 data-translate="service-title">🛠️ Tipo di Servizio Richiesto</h3>
+                    <div class="service-options">
+                        <div class="service-option">
+                            <input type="checkbox" id="argo" name="services" value="argo">
+                            <label for="argo">
+                                <div class="service-title">Registro Elettronico ARGO</div>
+                                <div class="service-desc" data-translate="argo-desc">Problemi di accesso, password</div>
+                            </label>
+                        </div>
+                        
+                        <div class="service-option">
+                            <input type="checkbox" id="gsuite" name="services" value="gsuite">
+                            <label for="gsuite">
+                                <div class="service-title">Classroom/G Suite</div>
+                                <div class="service-desc" data-translate="gsuite-desc">Credenziali, accesso, classroom</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="details" data-translate="details-label">Dettagli della Richiesta</label>
+                    <textarea id="details" name="details" data-translate="details-placeholder" placeholder="Descrivi in dettaglio il problema o la richiesta di assistenza..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="submit-btn copy-btn-style" data-translate="copy-text-btn">
+                        📋 Copia Testo Email di Richiesta
+                    </button>
+                    <p class="info-text" data-translate="copy-info">Dopo aver copiato il testo, dovrai inviarlo manualmente dalla tua email [assistenza@pudduprato.edu.it]</p>
+                    
+                    <button type="button" class="submit-btn mailto-btn" id="mailtoBtn" data-translate="send-email-btn" style="display: none;">
+                        ✉️ Apri Client Email per Invio
+                    </button>
+                </div>
+            </form>
+
+            <div id="emailPreview" class="email-preview">
+                <h3 data-translate="email-preview-title">
+                    📧 Anteprima Email
+                </h3>
+                <div class="email-content" id="emailContent"></div>
+                <button type="button" class="copy-btn" onclick="copyEmail()" data-translate="copy-btn">
+                    📋 Copia Email
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Traduzioni per tutte le lingue
+        const translations = {
+            it: {
+                'header-title': '📚 Assistenza Tecnica IC Puddu',
+                'header-subtitle': 'Compila il form per richiedere supporto tecnico',
+                'parent-name': 'Nome Genitore *',
+                'student-name': 'Nome Alunno *',
+                'school': 'Scuola *',
+                'plesso': 'Plesso *',
+                'class': 'Classe *',
+                'section': 'Sezione *',
+                'select-school': 'Seleziona la scuola',
+                'select-plesso': 'Seleziona il plesso',
+                'select-class': 'Seleziona la classe',
+                'select-section': 'Seleziona la sezione',
+                'service-title': '🛠️ Tipo di Servizio Richiesto',
+                'argo-desc': 'Problemi di accesso, password',
+                'gsuite-desc': 'Credenziali, accesso, classroom',
+                'details-label': 'Dettagli della Richiesta',
+                'details-placeholder': 'Descrivi in dettaglio il problema o la richiesta di assistenza...',
+                'copy-text-btn': '📋 Copia Testo Email di Richiesta',
+                'copy-info': 'Dopo aver copiato il testo, dovrai inviarlo manualmente dalla tua email [assistenza@pudduprato.edu.it]',
+                'send-email-btn': '✉️ Apri Client Email per Invio',
+                'email-preview-title': '📧 Anteprima Email',
+                'copy-btn': '📋 Copia Email',
+                'service-required': 'Per favore seleziona almeno un tipo di servizio.',
+                'copied': '✅ Copiato!'
+            },
+            zh: {
+                'header-title': '📚 IC Puddu 技术支持',
+                'header-subtitle': '填写表格申请技术支持',
+                'parent-name': '家长姓名 *',
+                'student-name': '学生姓名 *',
+                'school': '学校 *',
+                'plesso': '校区 *',
+                'class': '班级 *',
+                'section': '组别 *',
+                'select-school': '选择学校',
+                'select-plesso': '选择校区',
+                'select-class': '选择班级',
+                'select-section': '选择组别',
+                'service-title': '🛠️ 所需服务类型',
+                'argo-desc': '登录问题、密码',
+                'gsuite-desc': '凭据、访问、课堂',
+                'details-label': '申请详情',
+                'details-placeholder': '详细描述问题或支持请求...',
+                'copy-text-btn': '📋 复制申请邮件文本',
+                'copy-info': '复制文本后，需要从您的邮箱手动发送 [assistenza@pudduprato.edu.it]',
+                'send-email-btn': '✉️ 打开邮件客户端发送',
+                'email-preview-title': '📧 邮件预览',
+                'copy-btn': '📋 复制邮件',
+                'service-required': '请至少选择一种服务类型。',
+                'copied': '✅ 已复制！'
+            },
+            ur: {
+                'header-title': '📚 IC Puddu تکنیکی مدد',
+                'header-subtitle': 'تکنیکی مدد کے لیے فارم بھریں',
+                'parent-name': 'والدین کا نام *',
+                'student-name': 'طالب علم کا نام *',
+                'school': 'اسکول *',
+                'plesso': 'کیمپس *',
+                'class': 'کلاس *',
+                'section': 'سیکشن *',
+                'select-school': 'اسکول منتخب کریں',
+                'select-plesso': 'کیمپس منتخب کریں',
+                'select-class': 'کلاس منتخب کریں',
+                'select-section': 'سیکشن منتخب کریں',
+                'service-title': '🛠️ مطلوبہ سروس کی قسم',
+                'argo-desc': 'رسائی، پاس ورڈ کے مسائل',
+                'gsuite-desc': 'لاگ ان، رسائی، کلاس روم',
+                'details-label': 'درخواست کی تفصیلات',
+                'details-placeholder': 'مسئلہ یا مدد کی درخواست کی تفصیل بیان کریں...',
+                'copy-text-btn': '📋 درخواست ای میل ٹیکسٹ کاپی کریں',
+                'copy-info': '[assistenza@pudduprato.edu.it] ٹیکسٹ کاپی کرنے کے بعد، آپ کو اپنے ای میل سے دستی طور پر بھیجنا ہوگا',
+                'send-email-btn': '✉️ بھیجنے کے لیے ای میل کلائنٹ کھولیں',
+                'email-preview-title': '📧 ای میل پیش نظارہ',
+                'copy-btn': '📋 ای میل کاپی کریں',
+                'service-required': 'برائے کرم کم از کم ایک سروس کی قسم منتخب کریں۔',
+                'copied': '✅ کاپی ہو گیا!'
+            },
+            ar: {
+                'header-title': '📚 الدعم التقني IC Puddu',
+                'header-subtitle': 'املأ النموذج لطلب الدعم التقني',
+                'parent-name': 'اسم ولي الأمر *',
+                'student-name': 'اسم الطالب *',
+                'school': 'المدرسة *',
+                'plesso': 'الحرم الجامعي *',
+                'class': 'الصف *',
+                'section': 'القسم *',
+                'select-school': 'اختر المدرسة',
+                'select-plesso': 'اختر الحرم الجامعي',
+                'select-class': 'اختر الصف',
+                'select-section': 'اختر القسم',
+                'service-title': '🛠️ نوع الخدمة المطلوبة',
+                'argo-desc': 'مشاكل الدخول، كلمة المرور',
+                'gsuite-desc': 'بيانات الاعتماد، الوصول، الفصل الدراسي',
+                'details-label': 'تفاصيل الطلب',
+                'details-placeholder': 'اوصف بالتفصيل المشكلة أو طلب المساعدة...',
+                'copy-text-btn': '📋 نسخ نص البريد الإلكتروني للطلب',
+                'copy-info': '[assistenza@pudduprato.edu.it] بعد نسخ النص، ستحتاج إلى إرساله يدوياً من بريدك الإلكتروني',
+                'send-email-btn': '✉️ فتح عميل البريد الإلكتروني للإرسال',
+                'email-preview-title': '📧 معاينة البريد الإلكتروني',
+                'copy-btn': '📋 نسخ البريد الإلكتروني',
+                'service-required': 'يرجى اختيار نوع خدمة واحد على الأقل.',
+                'copied': '✅ تم النسخ!'
+            },
+            sq: {
+                'header-title': '📚 Asistencë Teknike IC Puddu',
+                'header-subtitle': 'Plotëso formularin për kërkesë ndihme teknike',
+                'parent-name': 'Emri i Prindit *',
+                'student-name': 'Emri i Nxënësit *',
+                'school': 'Shkolla *',
+                'plesso': 'Kampusi *',
+                'class': 'Klasa *',
+                'section': 'Seksioni *',
+                'select-school': 'Zgjidh shkollën',
+                'select-plesso': 'Zgjidh kampusin',
+                'select-class': 'Zgjidh klasën',
+                'select-section': 'Zgjidh seksionin',
+                'service-title': '🛠️ Lloji i Shërbimit të Kërkuar',
+                'argo-desc': 'Probleme hyrjeje, fjalëkalimi',
+                'gsuite-desc': 'Kredenciale, hyrje, klasë',
+                'details-label': 'Detajet e Kërkesës',
+                'details-placeholder': 'Përshkruaj në detaje problemin ose kërkesën për ndihmë...',
+                'copy-text-btn': '📋 Kopjo Tekstin e Email-it të Kërkesës',
+                'copy-info': 'Pasi të kopjosh tekstin, duhet ta dërgosh manualisht nga email-i yt [assistenza@pudduprato.edu.it]',
+                'send-email-btn': '✉️ Hap Klientin e Email-it për Dërgim',
+                'email-preview-title': '📧 Parapamja e Email-it',
+                'copy-btn': '📋 Kopjo Email-in',
+                'service-required': 'Ju lutemi zgjidhni të paktën një lloj shërbimi.',
+                'copied': '✅ U kopjua!'
+            }
+        };
+
+        let currentLanguage = 'it';
+
+        function changeLanguage() {
+            const selector = document.getElementById('languageSelector');
+            currentLanguage = selector.value;
+            
+            // Tradurre tutti gli elementi con data-translate
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[currentLanguage][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+                        element.placeholder = translations[currentLanguage][key];
+                    } else {
+                        element.textContent = translations[currentLanguage][key];
+                    }
+                }
+            });
+            
+            // Aggiorna il font per le lingue con caratteri speciali
+            const body = document.body;
+            body.classList.remove('chinese', 'urdu', 'albanian', 'arabic');
+            
+            if (currentLanguage === 'zh') {
+                body.classList.add('chinese');
+                body.style.fontFamily = '"PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif';
+                body.style.direction = 'ltr';
+                body.style.textAlign = 'left';
+            } else if (currentLanguage === 'ur') {
+                body.classList.add('urdu');
+                body.style.fontFamily = '"Noto Nastaliq Urdu", "Jameel Noori Nastaleeq", "Urdu Typesetting", serif';
+                body.style.direction = 'rtl';
+                body.style.textAlign = 'right';
+            } else if (currentLanguage === 'ar') {
+                body.classList.add('arabic');
+                body.style.fontFamily = '"Noto Sans Arabic", "Arial Unicode MS", "Tahoma", sans-serif';
+                body.style.direction = 'rtl';
+                body.style.textAlign = 'right';
+            } else if (currentLanguage === 'sq') {
+                body.classList.add('albanian');
+                body.style.fontFamily = '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                body.style.direction = 'ltr';
+                body.style.textAlign = 'left';
+            } else {
+                body.style.fontFamily = '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+                body.style.direction = 'ltr';
+                body.style.textAlign = 'left';
+            }
+        }
+
+        document.getElementById('assistanceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Raccogli dati dal form
+            const formData = new FormData(this);
+            const data = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (key === 'services') {
+                    if (!data.services) data.services = [];
+                    data.services.push(value);
+                } else {
+                    data[key] = value;
+                }
+            }
+            
+            // Verifica che almeno un servizio sia selezionato
+            if (!data.services || data.services.length === 0) {
+                alert(translations[currentLanguage]['service-required']);
+                return;
+            }
+            
+            // Genera email e copia automaticamente
+            generateEmailAndCopy(data);
+        });
+
+        function generateEmailAndCopy(data) {
+            const services = data.services.map(service => {
+                switch(service) {
+                    case 'argo': return 'Registro Elettronico ARGO';
+                    case 'gsuite': return 'Classroom/Credenziali G Suite';
+                    default: return service;
+                }
+            }).join(', ');
+            
+            const emailSubject = `Richiesta Assistenza - ${data.studentName} - ${services}`;
+            
+            const emailBody = `Gentile Team di Assistenza,
+
+Vi contatto per richiedere supporto tecnico per i seguenti servizi:
+
+DATI ALUNNO:
+• Nome Genitore: ${data.parentName}
+• Nome Alunno: ${data.studentName}
+• Scuola: ${data.school}
+• Plesso: ${data.plesso}
+• Classe: ${data.classe}
+• Sezione: ${data.sezione}
+
+SERVIZI RICHIESTI:
+• ${services}
+
+DETTAGLI DELLA RICHIESTA:
+${data.details || 'Nessun dettaglio aggiuntivo fornito.'}
+
+Rimango in attesa di una vostra cortese risposta.
+
+Cordiali saluti,
+${data.parentName}
+
+---
+Richiesta generata automaticamente tramite form di assistenza scolastica
+Data: ${new Date().toLocaleDateString('it-IT')} - ${new Date().toLocaleTimeString('it-IT')}`;
+
+            // Mostra anteprima
+            document.getElementById('emailContent').textContent = emailBody;
+            document.getElementById('emailPreview').style.display = 'block';
+            
+            // Copia automaticamente
+            const fullEmail = `Oggetto: ${emailSubject}\n\n${emailBody}`;
+            navigator.clipboard.writeText(fullEmail).then(() => {
+                const btn = document.querySelector('.copy-btn-style');
+                const originalText = btn.textContent;
+                btn.textContent = translations[currentLanguage]['copied'];
+                btn.style.background = '#27ae60';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                }, 2000);
+            }).catch(() => {
+                alert('Email copiata! Puoi incollarla nel tuo client di posta.');
+            });
+            
+            // Mostra il pulsante mailto
+            const mailtoBtn = document.getElementById('mailtoBtn');
+            mailtoBtn.style.display = 'block';
+            mailtoBtn.onclick = function() {
+                const emailTo = 'assistenza@pudduprato.edu.it';
+                const mailtoUrl = `mailto:${emailTo}?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+                window.location.href = mailtoUrl;
+            };
+            
+            // Scroll verso l'anteprima
+            document.getElementById('emailPreview').scrollIntoView({ behavior: 'smooth' });
+            
+            // Salva per la copia manuale
+            window.currentEmail = {
+                subject: emailSubject,
+                body: emailBody
+            };
+        }
+
+        // Funzione per capitalizzare automaticamente i nomi
+        function setupNameCapitalization() {
+            const nameFields = ['parentName', 'studentName'];
+            nameFields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                field.addEventListener('input', function(e) {
+                    const words = e.target.value.split(' ');
+                    const capitalizedWords = words.map(word => {
+                        if (word.length > 0) {
+                            return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                        }
+                        return word;
+                    });
+                    e.target.value = capitalizedWords.join(' ');
+                });
+            });
+        }
+
+        function copyEmail() {
+            if (window.currentEmail) {
+                const fullEmail = `Oggetto: ${window.currentEmail.subject}\n\n${window.currentEmail.body}`;
+                
+                navigator.clipboard.writeText(fullEmail).then(() => {
+                    const btn = document.querySelector('.copy-btn');
+                    const originalText = btn.textContent;
+                    btn.textContent = translations[currentLanguage]['copied'];
+                    btn.style.background = '#27ae60';
+                    
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '';
+                    }, 2000);
+                }).catch(() => {
+                    alert('Email copiata! Puoi incollarla nel tuo client di posta.');
+                });
+            }
+        }
+
+        // Animazione al caricamento
+        window.addEventListener('load', function() {
+            document.querySelector('.container').style.opacity = '0';
+            document.querySelector('.container').style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.querySelector('.container').style.transition = 'all 0.6s ease';
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.transform = 'translateY(0)';
+            }, 100);
+            
+            // Inizializza la capitalizzazione automatica
+            setupNameCapitalization();
+        });
+    </script>
+</body>
+</html>
